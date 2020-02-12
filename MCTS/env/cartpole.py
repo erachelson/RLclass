@@ -16,20 +16,16 @@ class CartPole:
         self.observation_space = self.env.observation_space
 
     def reset(self):
-        self.running_reward = 0
         return self.env.reset()
 
     def step(self, action):
         obs, rew, done, info = self.env.step(action)
-        self.running_reward += rew
-        score = self.running_reward if done else 0
-        return obs, score, done, info
+        return obs, rew, done, info
 
     def set_state(self, state):
-        self.running_reward = state[1]
-        self.env = deepcopy(state[0])
+        self.env = deepcopy(state)
         obs = np.array(list(self.env.unwrapped.state))
         return obs
 
     def get_state(self):
-        return deepcopy(self.env), self.running_reward
+        return deepcopy(self.env)
